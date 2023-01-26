@@ -17,10 +17,18 @@ const sequelize = require('./utill/database');
 
 app.use(express.static(path.join(__dirname, 'frontend')));
 
+const User = require('./models/user');
+const Chat = require('./models/chat');
+
 const userRouter = require('./routes/user');
+const chatRouter = require('./routes/chat');
 
-app.use('/user',userRouter);
+app.use('/user', userRouter);
+app.use('/chat', chatRouter);
 
+
+User.hasMany(Chat);
+Chat.belongsTo(User);
 
 sequelize
 .sync()

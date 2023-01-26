@@ -51,6 +51,8 @@ form.addEventListener('click' , (e) => {
                 return alert(res.data.message);
             }
             alert('Logged in Successfuly !');
+            const token = res.data.token;
+            localStorage.setItem('token', token);
             return window.location.href = './chat.html';
         })
         .catch(err => {
