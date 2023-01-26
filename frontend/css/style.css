@@ -86,3 +86,9 @@ body {
 .signup-form form a:hover{
     text-decoration: underline;
 }
+.error {
+    color: red;
+    background-color: white;
+    text-align: center;
+    font-size: large;
+  }
