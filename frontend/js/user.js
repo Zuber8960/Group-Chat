@@ -29,7 +29,8 @@ form.addEventListener('click' , (e) => {
             if(res.data.message){
                 return alert(res.data.message);
             }
-            return alert('Signed up Successfuly !');
+            alert('Signed up Successfuly !');
+            return window.location.href = './login.html';
         })
         .catch(err => {
             console.log(err);
@@ -49,7 +50,8 @@ form.addEventListener('click' , (e) => {
             if(res.data.message){
                 return alert(res.data.message);
             }
-            return alert('Logged in Successfuly !');
+            alert('Logged in Successfuly !');
+            return window.location.href = './chat.html';
         })
         .catch(err => {
             console.log(err);

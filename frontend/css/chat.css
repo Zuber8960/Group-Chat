@@ -1,0 +1,465 @@
+* {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #abd9e9;
+    font-family: Arial;
+    bottom: 0;
+    overflow: auto;
+  }
+  #container {
+    width: 100%;
+    height: 100%;
+    background: #eff3f7;
+    margin: 0 auto;
+    font-size: 0;
+    border-radius: 5px;
+    bottom: 0px;
+  }
+  aside {
+    width: 30%;
+    height: 100%;
+    background-color: #3b3e49;
+    display: inline-block;
+    font-size: 15px;
+    vertical-align: top;
+  }
+  main {
+    width: 70%;
+    height: 100%;
+    display: inline-block;
+    font-size: 15px;
+    vertical-align: top;
+  }
+  
+  aside header {
+    padding: 20px;
+  }
+  aside input {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 50px 0 20px;
+    background-color: #5e616a;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    /* background-button: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_search.png); */
+    background-repeat: no-repeat;
+    background-position: 170px;
+    background-size: 40px;
+  }
+  aside input::placeholder {
+    color: #fff;
+  }
+  aside ul {
+    width: 100%;
+    padding-left: 0;
+    margin: 0;
+    list-style-type: none;
+    overflow-x: auto;
+    overflow-y: auto;
+    scrollbar-width: none;
+    height: 550px;
+  }
+  aside li {
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  aside li:hover {
+    background-color: #5e616a;
+  }
+  h2,
+  h3 {
+    margin: 0;
+  }
+  aside li img {
+    border-radius: 50%;
+    margin-left: 20px;
+    margin-right: 8px;
+  }
+  aside li div {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 12px;
+  }
+  aside li h2 {
+    font-size: 14px;
+    color: #fff;
+    font-weight: normal;
+    margin-bottom: 5px;
+  }
+  aside li h3 {
+    font-size: 12px;
+    color: #7e818a;
+    font-weight: normal;
+  }
+  
+  .status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 7px;
+  }
+  
+  .green {
+    background-color: #58b666;
+  }
+  .blue {
+    background-color: #6fbced;
+    margin-right: 0;
+    margin-left: 7px;
+  }
+  
+  main header {
+    display: flex;
+    flex-direction: row;
+    height: 110px;
+    padding: 30px 20px 30px 40px;
+  }
+  main header > * {
+    display: inline-block;
+    vertical-align: top;
+  }
+  main header img:first-child {
+    border-radius: 50%;
+  }
+  main header img:last-child {
+    width: 24px;
+    margin-top: 8px;
+  }
+  main header div {
+    margin-left: 10px;
+    margin-right: 145px;
+  }
+  main header h2 {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  main header h3 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #7e818a;
+  }
+  
+  #chat {
+    padding-left: 0;
+    margin: 0;
+    list-style-type: none;
+    overflow-y: auto;
+    scrollbar-width: none;
+  
+    height: 535px;
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+  }
+  #chat li {
+    padding: 10px 30px;
+  }
+  #chat h2,
+  #chat h3 {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: normal;
+  }
+  #chat h3 {
+    color: #bbb;
+  }
+  #chat .entete {
+    margin-bottom: 5px;
+  }
+  #chat .message {
+    padding: 20px;
+    color: #fff;
+    line-height: 25px;
+    max-width: 90%;
+    display: inline-block;
+    text-align: left;
+    border-radius: 5px;
+    overflow: auto;
+    padding: 10px;
+  }
+  #chat .me {
+    text-align: right;
+  }
+  #chat .you .message {
+    background-color: #58b666;
+  }
+  #chat .me .message {
+    background-color: #6fbced;
+  }
+  #chat .triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+  }
+  #chat .you .triangle {
+    border-color: transparent transparent #58b666 transparent;
+    margin-left: 20px;
+  }
+  #chat .me .triangle {
+    border-color: transparent transparent #6fbced transparent;
+    margin-left: 100%;
+    right: 32px;
+    position: relative;
+  }
+  
+  main footer {
+    height: 100px;
+    padding: 30px 30px 0px 20px;
+  }
+  main footer input {
+    resize: none;
+    border: none;
+    /* display: block; */
+    width: 80%;
+    height: 80px;
+    border-radius: 3px;
+    padding: 20px 20px 0px 20px;
+    font-size: 13px;
+    margin-bottom: 10px;
+    margin-right: 30px;
+  }
+  main footer input::placeholder {
+    color: rgb(148, 138, 138);
+  }
+  
+  .logout-div {
+    position: absolute;
+    right: -100px;
+    top: 40px;
+  }
+  
+  .search-box {
+    width: 100%;
+    position: relative;
+    display: flex;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  
+  .search-input {
+    width: 100%;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    padding: 15px 45px 15px 15px;
+    background-color: #eaeaeb;
+    color: #6c6c6c;
+    border-radius: 6px;
+    border: none;
+    transition: all 0.4s;
+  }
+  
+  .search-input:focus {
+    border: none;
+    outline: none;
+    box-shadow: 0 1px 12px #b8c6db;
+    -moz-box-shadow: 0 1px 12px #b8c6db;
+    -webkit-box-shadow: 0 1px 12px #b8c6db;
+  }
+  
+  .search-btn {
+    background-color: transparent;
+    font-size: 18px;
+    padding: 6px 9px;
+    margin-left: -45px;
+    border: none;
+    color: #6c6c6c;
+    transition: all 0.4s;
+    z-index: 10;
+  }
+  
+  .search-btn:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+    color: black;
+  }
+  
+  .search-btn:focus {
+    outline: none;
+    color: black;
+  }
+  
+  .footer {
+    position: relative;
+    bottom: 5px;
+  }
+  
+  .footer p {
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    color: #000;
+  }
+  
+  .footer a {
+    color: #fff;
+    transition: all 0.4s;
+  }
+  
+  .footer a:hover {
+    color: #eaeaeb;
+  }
+  
+  .group-style {
+    width: 100%;
+    height: 50px;
+    position: relative;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    text-overflow: ellipsis;
+  }
+  
+  .admin-buttons {
+    width: 50%;
+    margin-top: 6px;
+    margin-left: 12px;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .user-btn {
+    padding: 20px auto;
+    width: 50%;
+    text-align: center;
+    color: rgb(255, 240, 211);
+    border: 0px;
+    background-color: #484b58;
+    border-radius: 5px;
+    margin-top: 10px;
+    white-space: normal !important;
+    word-wrap: break-word;
+  
+    font-size: 20px;
+  }
+  
+  .user-btn:hover {
+    background-color: #455469;
+    color: rgb(186, 244, 93);
+  }
+  
+  #group {
+    margin-top: 20px;
+  }
+  
+  .hrtag {
+    margin: 20px;
+    height: 20px;
+    border-style: solid;
+    border-color: #8c8b8b;
+    border-width: 4px 0 0 0;
+    border-radius: 20px;
+  }
+  #groupname {
+    color: rgb(184, 28, 28);
+    font-size: 30px;
+    font-weight: bolder;
+  }
+  
+  #username {
+    border-radius: 4px;
+    position: relative;
+    width: 80%;
+    height: 40px;
+    color: rgb(19, 182, 155);
+    align-items: center;
+    margin: 20px auto;
+    padding-top: 3px;
+  }
+  
+  .add-user {
+    margin-top: 10px;
+  }
+  
+  .remove-admin {
+    margin-top: 10px;
+  }
+  .remove-user {
+    margin-top: 10px;
+  }
+  
+  #chat-form {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+  
+  #uploadForm {
+    overflow: inherit;
+    width: 50px;
+    height: 10x;
+    top: 8px;
+    /* margin-top: 50px; */
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: inherit;
+    margin-left: 70px;
+    position: relative;
+    /* bottom: 10px; */
+  }
+  
+  #inp {
+    /* padding-top: px; */
+    /* position: relative; */
+    position: relative;
+    left: 35px;
+    width: 250px;
+    top: 2px;
+  }
+  
+  .uploadbtn {
+    position: relative;
+    bottom: 28px;
+    /* position: sticky; */
+    left: 125px;
+  }
+  
+  .formholder {
+    padding: 5px;
+  }
+  
+  .chatbar {
+    width: 100%;
+  }
+  
+  .filemsg {
+    display: block;
+    list-style-type: none;
+  }
+  .modal {
+    list-style-type: none;
+  
+    display: none; /* initially hide the modal */
+    position: relative; /* position the modal in the center of the screen */
+    top: 200px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* make the modal appear on top of other elements */
+    background-color: rgba(0, 0, 0, 0.5); /* add a semi-transparent background */
+  }
+  .modal.show {
+    display: block; /* show the modal when the class "show" is added */
+  }
+  .modal-content {
+    list-style-type: none;
+    margin: 0;
+    scrollbar-width: none;
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    height: 500px;
+    overflow: auto;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px 20px 0px 20px;
+  }
