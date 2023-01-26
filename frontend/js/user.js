@@ -1,7 +1,8 @@
-const form = document.getElementById('form')
+const form = document.getElementById('form');
+const backendAPIs = 'http://localhost:3000/user'
 
 form.addEventListener('click' , (e) => {
-    if(e.target.classList.contains('btn-success')){
+    if(e.target.classList.contains('signup')){
         e.preventDefault();
         console.log('abcd');
         let name;
@@ -22,7 +23,7 @@ form.addEventListener('click' , (e) => {
         const obj = {name, email, phonenumber, password};
         console.log(obj);
 
-        axios.post('http://localhost:3000/user/signup', obj)
+        axios.post(`${backendAPIs}/signup`, obj)
         .then(res => {
             console.log(res)
             if(res.data.message){
@@ -34,6 +35,23 @@ form.addEventListener('click' , (e) => {
             console.log(err);
             return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;
         })
+    }
+
+    if(e.target.classList.contains('login')){
+        e.preventDefault();
+        const email = e.target.parentNode.parentNode.email.value.trim();
+        const password = e.target.parentNode.parentNode.password.value;
+        const obj = {email, password};
+        console.log(obj);
+        axios.post(`${backendAPIs}/login`, obj)
+        .then(res => {
+            console.log(res);
+            if(res.data.message){
+                return alert(res.data.message);
+            }
+            return alert('Logged in Successfuly !');
+        })
+        .catch(err => console.log(err));
     }
 })
 

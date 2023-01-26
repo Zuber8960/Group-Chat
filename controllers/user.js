@@ -8,8 +8,8 @@ exports.signup = async (req, res, next) => {
     if(name=="" || email=="" || phonenumber=="" || password==""){
         return res.status(201).json({success:false, message: 'Please fill all feilds'});
     }
-    const alreadyUSer = await User.findAll({where :{ email: email}});
-    if(alreadyUSer.legth){
+    const alreadyUSer = await User.findOne( { where : { email: email } } );
+    if(alreadyUSer){
         return res.status(201).json({success:false, message: `User: ${email} is already exist`});
     }
     const saltRounds = 10;
@@ -27,4 +27,13 @@ exports.signup = async (req, res, next) => {
             return res.status(400).json({ success : false, error: err });
         }
     })
+}
+
+exports.login = (req, res, next) => {
+    const {email, password} = req.body;
+    if(email=="" || password==""){
+        return res.status(201).json({success:false, message: 'Please fill all feilds'});
+    }
+    return res.status(200).json({success:true});
+
 }
