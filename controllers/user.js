@@ -29,11 +29,40 @@ exports.signup = async (req, res, next) => {
     })
 }
 
-exports.login = (req, res, next) => {
+const jwt = require('jsonwebtoken');
+
+function generateToken(id , name){
+    return jwt.sign( {id: id, name: name} , process.env.secretKey);
+}
+
+
+exports.login = async (req, res, next) => {
     const {email, password} = req.body;
     if(email=="" || password==""){
         return res.status(201).json({success:false, message: 'Please fill all feilds'});
     }
-    return res.status(200).json({success:true});
+
+    const user = await User.findOne( { where : { email: email } } );
+    if(!user){
+        return res.status(404).json({success:false, message: `User : ${email} doesn't exist !`});
+    }
+
+    bcrypt.compare(password, user.password , (err, response) => {
+        if(err){
+            console.log(err);
+        }
+        if(response === true){
+            const token = generateToken(user.id,user.name);
+            // console.log(`token ==> ${token}`);
+            return res.status(200).json({success:true, token: token});
+        }else{
+            return res.status(401).json({success:false, message: 'Entered wrong password !'});
+        }
+    })
+
+
+
+
+
 
 }

@@ -51,7 +51,16 @@ form.addEventListener('click' , (e) => {
             }
             return alert('Logged in Successfuly !');
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            if(err.response.status === 404){
+                return alert(err.response.data.message);
+            }
+            if(err.response.status === 401){
+                return alert(err.response.data.message);
+            }
+            return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;
+        });
     }
 })
 
