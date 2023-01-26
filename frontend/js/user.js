@@ -28,12 +28,10 @@ form.addEventListener('click' , (e) => {
             if(res.data.message){
                 return alert(res.data.message);
             }
+            return alert('Signed up Successfuly !');
         })
         .catch(err => {
             console.log(err);
-            if(err.response.status == 404){
-                return document.body.innerHTML += `<div class="error">${err.response.data.message}</div>`;
-            }
             return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;
         })
     }

@@ -2,11 +2,15 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 
-exports.signup = (req, res, next) => {
+exports.signup = async (req, res, next) => {
     // console.log(`body===>` , req.body);
     const {name, email, phonenumber, password} = req.body;
     if(name=="" || email=="" || phonenumber=="" || password==""){
         return res.status(201).json({success:false, message: 'Please fill all feilds'});
+    }
+    const alreadyUSer = await User.findAll({where :{ email: email}});
+    if(alreadyUSer.legth){
+        return res.status(201).json({success:false, message: `User: ${email} is already exist`});
     }
     const saltRounds = 10;
     bcrypt.hash(password,saltRounds, async(err, hash) => {
@@ -19,11 +23,6 @@ exports.signup = (req, res, next) => {
             })
             return res.status(200).json({ success : true, user });
         }catch(err){
-            // console.log(err);
-            if (err.errors[0].message == 'email must be unique') {
-                console.log('email already exist', err.errors[0].value);
-                return res.status(404).json({ success: false, message: `Eror(404) : ${err.errors[0].value} is already exist` });
-            }
             console.log(err);
             return res.status(400).json({ success : false, error: err });
         }
