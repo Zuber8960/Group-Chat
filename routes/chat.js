@@ -8,4 +8,6 @@ const authorization = require('../middleware/auth');
 
 router.post('/sendMessage', authorization.authentication,  chatController.sendMessage);
 
+router.get('/getMessage' , authorization.authentication,  chatController.getMessage);
+
 module.exports = router;
