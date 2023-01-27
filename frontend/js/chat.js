@@ -3,6 +3,18 @@ const backendAPIs = 'http://localhost:3000/chat';
 const token = localStorage.getItem('token');
 const chat = document.getElementById('chat');
 
+// new Promise((resolve, reject) => {
+//     setInterval(() => {
+//         console.log('hello');
+//         resolve(window.location.reload());
+//     }, 1000);
+// })
+
+setInterval(function() {
+    location.reload();
+ }, 8000);
+
+
 window.addEventListener('DOMContentLoaded' , async() => {
     const response = await axios.get(`${backendAPIs}/getMessage` ,{headers : {'Authorization' : token} });
     console.log(response);
@@ -39,10 +51,11 @@ form.addEventListener('click', async (e) => {
 
 function showMyMessageOnScreen(obj){
     const timeForUser = time(obj.createdAt);
+    const dateOfUser = date(obj.createdAt);
     chat.innerHTML += `
             <li class="me">
             <div class="entete">
-              <h3>${timeForUser}, Today</h3>
+              <h3>${timeForUser}, ${dateOfUser}</h3>
               <h2>${obj.name}</h2>
               <span class="status blue"></span>
             </div>
@@ -67,7 +80,7 @@ function showOtherMessgeOnScreen(obj){
                 </div>
                 <div class="triangle"></div>
                 <div class="message">
-                    ${obj.message};
+                    ${obj.message}
                 </div>
             </li>
           `
@@ -80,6 +93,16 @@ function time(string){
 }
 
 function date(string){
+    const today = new Date();
     const date_object = new Date(string);
+    
+    const today_date = `${today.getDate()}-${(today.getMonth() +1)}-${today.getFullYear()}`;
+    const yesterday_date = `${today.getDate() -1}-${(today.getMonth() +1)}-${today.getFullYear()}`;
+    const gettingDate = `${date_object.getDate()}-${(date_object.getMonth() +1)}-${date_object.getFullYear()}`;
+    if(today_date == gettingDate){
+        return 'Today';
+    }else if(gettingDate == yesterday_date){
+        return 'Yesterday'
+    }
     return date_object.toLocaleDateString("en-US", {year: "numeric", month: "short", day: "numeric"});
 }
