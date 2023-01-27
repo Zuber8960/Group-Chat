@@ -3,22 +3,45 @@ const backendAPIs = 'http://localhost:3000/chat';
 const token = localStorage.getItem('token');
 const chat = document.getElementById('chat');
 
-// new Promise((resolve, reject) => {
-//     setInterval(() => {
-//         console.log('hello');
-//         resolve(window.location.reload());
-//     }, 1000);
-// })
+let chatArray = [];
+let lastMessageId ;
 
-setInterval(function() {
-    location.reload();
- }, 8000);
+// setInterval(function() {
+//     location.reload();
+//  }, 8000);
 
 
 window.addEventListener('DOMContentLoaded' , async() => {
-    const response = await axios.get(`${backendAPIs}/getMessage` ,{headers : {'Authorization' : token} });
-    console.log(response);
-    response.data.messages.forEach(ele => {
+    let message = JSON.parse(localStorage.getItem('messages'));
+    if(message == undefined || message.length == 0 ){
+        lastMessageId = 0;
+    }else{
+        lastMessageId = message[message.length -1].id;
+    }
+
+    const response = await axios.get(`${backendAPIs}/getMessage?lastMessageId=${lastMessageId}` ,{headers : {'Authorization' : token} });
+    // console.log(response);
+    const backendArray = response.data.messages;
+
+    if(message){
+        chatArray = message.concat(backendArray);
+    }else{
+        chatArray = chatArray.concat(backendArray);
+    }
+
+    // while(chatArray.length>10){
+    //     chatArray.shift();
+    // }
+
+    chatArray = chatArray.slice(chatArray.length-10);
+
+    const localStorageMessages = JSON.stringify(chatArray);
+    localStorage.setItem('messages', localStorageMessages);
+
+    
+    console.log(`messages===>` , JSON.parse(localStorage.getItem('messages')));
+
+    chatArray.forEach(ele => {
         if(ele.currentUser){
             showMyMessageOnScreen(ele);
         }else{
