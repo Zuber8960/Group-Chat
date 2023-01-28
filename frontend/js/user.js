@@ -1,5 +1,5 @@
 const form = document.getElementById('form');
-const backendAPIs = 'http://localhost:3000/user'
+const backendAPIs = 'http://localhost:3000/user';
 
 form.addEventListener('click' , (e) => {
     if(e.target.classList.contains('signup')){
@@ -53,7 +53,8 @@ form.addEventListener('click' , (e) => {
             alert('Logged in Successfuly !');
             const token = res.data.token;
             localStorage.setItem('token', token);
-            return window.location.href = './chat.html';
+            localStorage.setItem('username' , res.data.username);
+            return window.location.href = './group.html';
         })
         .catch(err => {
             console.log(err);

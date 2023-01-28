@@ -54,7 +54,7 @@ exports.login = async (req, res, next) => {
         if(response === true){
             const token = generateToken(user.id,user.name);
             // console.log(`token ==> ${token}`);
-            return res.status(200).json({success:true, token: token});
+            return res.status(200).json({success:true, token: token , username: user.name});
         }else{
             return res.status(401).json({success:false, message: 'Entered wrong password !'});
         }

@@ -1,7 +1,13 @@
 const form = document.getElementById('chat-form');
 const backendAPIs = 'http://localhost:3000/chat';
-const token = localStorage.getItem('token');
 const chat = document.getElementById('chat');
+
+
+const token = localStorage.getItem('token');
+const groupId = localStorage.getItem('groupId');
+const groupName = localStorage.getItem('groupName');
+let username = localStorage.getItem('username');
+username = username.split(" ")[0];
 
 let chatArray = [];
 let lastMessageId ;
@@ -12,15 +18,18 @@ let lastMessageId ;
 
 
 window.addEventListener('DOMContentLoaded' , async() => {
-    let message = JSON.parse(localStorage.getItem('messages'));
+    document.getElementById('groupname').innerText = groupName;
+    document.getElementById('username').innerText = `Hey ${username} !`;
+
+    let message = JSON.parse(localStorage.getItem(`messages${groupId}`));
     if(message == undefined || message.length == 0 ){
         lastMessageId = 0;
     }else{
         lastMessageId = message[message.length -1].id;
     }
 
-    const response = await axios.get(`${backendAPIs}/getMessage?lastMessageId=${lastMessageId}` ,{headers : {'Authorization' : token} });
-    // console.log(response);
+    const response = await axios.get(`${backendAPIs}/getMessage/${groupId}?lastMessageId=${lastMessageId}` ,{headers : {'Authorization' : token} });
+    console.log(response.data);
     const backendArray = response.data.messages;
 
     if(message){
@@ -33,13 +42,15 @@ window.addEventListener('DOMContentLoaded' , async() => {
     //     chatArray.shift();
     // }
 
-    chatArray = chatArray.slice(chatArray.length-10);
+    if(chatArray.length>10){
+        chatArray = chatArray.slice(chatArray.length-10);
+    }
 
     const localStorageMessages = JSON.stringify(chatArray);
-    localStorage.setItem('messages', localStorageMessages);
 
-    
-    console.log(`messages===>` , JSON.parse(localStorage.getItem('messages')));
+    localStorage.setItem(`messages${groupId}`, localStorageMessages);
+
+    console.log(`messages===>` , JSON.parse(localStorage.getItem(`messages${groupId}`)));
 
     chatArray.forEach(ele => {
         if(ele.currentUser){
@@ -56,7 +67,7 @@ form.addEventListener('click', async (e) => {
             e.preventDefault();
             const message = e.target.parentNode.message.value;
 
-            const response = await axios.post(`${backendAPIs}/sendMessage`, { message: message }, { headers: { 'Authorization': token } });
+            const response = await axios.post(`${backendAPIs}/sendMessage/${groupId}`, { message: message }, { headers: { 'Authorization': token } });
             console.log(response);
             showMyMessageOnScreen(response.data.data);
             e.target.parentNode.message.value = null;
@@ -129,3 +140,20 @@ function date(string){
     }
     return date_object.toLocaleDateString("en-US", {year: "numeric", month: "short", day: "numeric"});
 }
+
+
+
+//burger-button funtionallity
+const menuBtn = document.querySelector('.menu-btn');
+let menuOpen = false;
+menuBtn.addEventListener('click', ()=> {
+    if(!menuOpen) {
+        menuBtn.classList.add('open');
+        menuOpen=true;
+    }
+    else {
+        menuBtn.classList.remove('open');
+        menuOpen=false;
+    }
+})
+

@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Group Chat</title>
+    <link rel="icon" href="../img/favicon.png" />
     <link rel="stylesheet" href="../css/chat.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
@@ -27,6 +28,17 @@
   </head>
   <body>
     <div class="group-container" id="container">
+      <aside>
+        <h3 class="bg-info-subtle text-center" id="username">Hey User !</h3>
+        <br />
+        <hr class="hrtag" />
+
+        <div class="menu-btn">
+          <div class="menu-btn__burger"></div>
+        </div>
+        
+        <ul id="group"></ul>
+      </aside>
       <main>
         <header>
           <img src="../img/download.jpg" style="height: 50px" alt="" />
@@ -41,7 +53,7 @@
           <li class="you">
             <div class="entete">
               <span class="status green"></span>
-              <h2>VENOM</h2>
+              <h2>THOR</h2>
               <h3>10:12AM, Today</h3>
             </div>
             <div class="triangle"></div>

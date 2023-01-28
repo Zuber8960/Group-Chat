@@ -92,3 +92,23 @@ body {
     text-align: center;
     font-size: large;
   }
+
+
+.group-name{
+    text-align: center;
+    font-size: medium;
+    color: #636363;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.centered-form__box {
+    box-shadow: 0 0 17px 1px #585a61;
+    background: #f0edef;
+    padding: 25px;
+    width: 400px;
+}
+
+.msg-chat {
+    margin-bottom: 20px;
+}
