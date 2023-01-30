@@ -54,6 +54,7 @@ form.addEventListener('click' , (e) => {
             const token = res.data.token;
             localStorage.setItem('token', token);
             localStorage.setItem('username' , res.data.username);
+            localStorage.setItem('email' , res.data.email);
             return window.location.href = './group.html';
         })
         .catch(err => {

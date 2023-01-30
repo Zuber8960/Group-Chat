@@ -94,6 +94,7 @@ body {
   }
 
 
+
 .group-name{
     text-align: center;
     font-size: medium;
@@ -112,3 +113,10 @@ body {
 .msg-chat {
     margin-bottom: 20px;
 }
+
+
+.logout-div {
+    position: absolute;
+    right: 0px;
+    /* top: 40px; */
+  }

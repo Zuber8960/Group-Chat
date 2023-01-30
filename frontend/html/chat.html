@@ -31,12 +31,39 @@
       <aside>
         <h3 class="bg-info-subtle text-center" id="username">Hey User !</h3>
         <br />
+        <header>
+          <div class="search-box" id="add-user">
+            <form class="search-box" id="form-group">
+              <input
+                class="search-input groupName"
+                type="text"
+                name="email"
+                placeholder="Type user's email:"
+              />
+              <button class="search-btn fas fa-search-plus"></button>
+            </form>
+          </div>
+        </header>
         <hr class="hrtag" />
 
-        <div class="menu-btn">
+
+        <!-- <div class="menu-btn">
           <div class="menu-btn__burger"></div>
-        </div>
+        </div> -->
         
+        <nav>
+          <div class="burger-button">
+              <span class="burger-top"></span>
+              <span class="burger-middle"></span>
+              <span class="burger-bottom"></span>
+          </div>
+           <div class="burger-menu ">
+             <ul id="group">
+              <li class="names"><u>User</u><span style="float:right;"><u>Admin Status</u></span></li>
+             </ul>
+           </div>
+        </nav>
+
         <ul id="group"></ul>
       </aside>
       <main>
@@ -46,7 +73,7 @@
             <p id="groupname">ABCD</p>
           </div>
           <div class="logout-div">
-            <button class="fa fa-sign-out btn btn-danger rounded-5" id="logout" type="button" ></button>
+            <button class="fa fa-sign-out btn btn-danger rounded-5" id="logout" type="button" onclick="logout()">Logout</button>
           </div>
         </header>
         <ul id="chat">
@@ -84,7 +111,7 @@
         </footer>
       </main>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.6/axios.min.js"></script>
     <script src="../js/chat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.4/axios.min.js"></script>
   </body>
 </html>

@@ -34,6 +34,7 @@ app.use('/group', groupRouter);
 User.hasMany(Chat);
 Chat.belongsTo(User);//one to many relationship
 
+//many to many relationship
 User.belongsToMany(Group , {
     through : UserGroup
 });
@@ -42,7 +43,7 @@ Group.belongsToMany(User , {
 });
 
 Group.hasMany(Chat);
-Chat.belongsTo(Group);
+Chat.belongsTo(Group);//one to many relationship
 
 sequelize
 .sync()
