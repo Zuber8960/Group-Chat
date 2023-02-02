@@ -22,6 +22,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('username').innerText = `Hey! ${username.split(" ")[0]}`;
 
     let message = JSON.parse(localStorage.getItem(`messages${groupId}`));
+
     if (message == undefined || message.length == 0) {
         lastMessageId = 0;
     } else {
@@ -30,7 +31,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     const response = await axios.get(`${backendAPIs}/getMessage/${groupId}?lastMessageId=${lastMessageId}`, { headers: { 'Authorization': token } });
     // console.log(response.data);
-    const backendArray = response.data.messages;
+    const backendArray = response.data.arrayOfMessages;
+    console.log(backendArray);
 
     if (message) {
         chatArray = message.concat(backendArray);
@@ -38,12 +40,9 @@ window.addEventListener('DOMContentLoaded', async () => {
         chatArray = chatArray.concat(backendArray);
     }
 
-    // while(chatArray.length>10){
-    //     chatArray.shift();
-    // }
 
-    if (chatArray.length > 10) {
-        chatArray = chatArray.slice(chatArray.length - 10);
+    if (chatArray.length > 20) {
+        chatArray = chatArray.slice(chatArray.length - 20);
     }
 
     const localStorageMessages = JSON.stringify(chatArray);
@@ -163,6 +162,7 @@ function date(string) {
     } else if (gettingDate == yesterday_date) {
         return 'Yesterday'
     }
+    
     return date_object.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
 
@@ -195,11 +195,11 @@ burgerButton.addEventListener("click", function() {
 //     }
 // })
 
-
+let numOfUsers;
 async function openBox() {
     const users = await axios.get(`${backendAPIs}/getUsers/${groupId}`);
     // console.log(users.data);
-    const numOfUsers = users.data.userDetails.length;
+    numOfUsers = users.data.userDetails.length;
 
     allName.innerHTML = `
     <li class="names"><u>User(${numOfUsers})</u><span style="float:right;"><u>Admin Status</u></span></li>
@@ -220,11 +220,11 @@ async function openBox() {
 function displayNameForAdmin(user) {
     if (user.isAdmin) {
         allName.innerHTML += `
-        <li class="names" id="name${user.email}">${user.name}<button class="delete" onClick="deleteUser('${user.email}')">-</button><button id="admin${user.email}" class="userButton" onClick="removeAdmin('${user.email}')">remove admin</button></li>
+        <li class="names" id="name${user.email}">${user.name}<button class="delete" onClick="deleteUser('${user.email}')">X</button><button id="admin${user.email}" class="userButton" onClick="removeAdmin('${user.email}')">remove admin</button></li>
         `
     } else {
         allName.innerHTML += `
-        <li class="names" id="name${user.email}">${user.name}<button class="delete" onClick="deleteUser('${user.email}')">-</button><button id="admin${user.email}" class="userButton" onClick="makeAdmin('${user.email}')">make admin</button></li>
+        <li class="names" id="name${user.email}">${user.name}<button class="delete" onClick="deleteUser('${user.email}')">X</button><button id="admin${user.email}" class="userButton" onClick="makeAdmin('${user.email}')">make admin</button></li>
         `
     }
     if (user.email == userEmail) {
@@ -232,22 +232,22 @@ function displayNameForAdmin(user) {
     }
 }
 
-// {/* <button class="delete" onClick="deleteUser('${user.email}')">-</button> */}
 
 function displayNameForOther(user) {
     if (user.isAdmin) {
         allName.innerHTML += `
-        <li class="names" id="name${user.email}">${user.name}</button><button class="userButton">Yes</button></li>
+        <li class="names" id="name${user.email}">${user.name}</button><button class="userButton">✔️</button></li>
         `
     } else {
         allName.innerHTML += `
         <li class="names" id="name${user.email}">${user.name}</li>
         `
     }
+
     if (user.email == userEmail) {
         document.getElementById(`name${userEmail}`).style.color = "rgb(186, 244, 93)";
         document.getElementById(`name${userEmail}`).innerHTML += `
-        <button class="delete" onClick="deleteUser('${userEmail}')">-</button>
+        <button class="delete" onClick="deleteUser('${userEmail}')">X</button>
         `
     }
 }
@@ -276,8 +276,9 @@ async function deleteUser(email) {
             const response = await axios.post(`${backendAPIs}/deleteUser/${groupId}`, { email: email }, { headers: { 'Authorization': token } });
             console.log(response);
             allName.removeChild(document.getElementById(`name${email}`));
-            let numOfUsers = allName.firstElementChild.innerText.split("\n")[0].split('(')[1].split(')')[0];
-            numOfUsers = num-1;
+            
+            numOfUsers = +numOfUsers - 1;
+            allName.firstElementChild.firstElementChild.innerText = `User(${numOfUsers})`;
 
             alert(response.data.message);
         } catch (err) {
@@ -286,6 +287,7 @@ async function deleteUser(email) {
         }
     }
 }
+
 
 async function removeAdmin(email) {
     try {
@@ -304,15 +306,30 @@ async function removeAdmin(email) {
     }
 }
 
+const upload = document.getElementById('uploadFile');
+
+upload.addEventListener('submit' , async (e) => {
+    e.preventDefault();
+    let file = e.target.firstElementChild.files[0];
+    console.log(file);
+    const formData = new FormData(upload);
+
+    // // formData.append('username', 'Zuber');
+    // formData.append('file' , file);
+
+    console.log(formData);
+    const data = await axios.post(`${backendAPIs}/sendFile/${groupId}` , formData , { headers: { 'Authorization': token , "Content-Type" : "multipart/form-data"  } });
+    console.log(data);
+})
+
+
+
+
+
 
 function logout(){
     if(confirm('Are you sure ?')){
-        localStorage.removeItem('username');
-        localStorage.removeItem('token');
-        localStorage.removeItem('groupId');
-        localStorage.removeItem('groupname');
-        localStorage.removeItem('email');
-        localStorage.removeItem('groupName');
+        localStorage.clear();
         return window.location.href = './login.html';
     }
 }

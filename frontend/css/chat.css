@@ -201,12 +201,12 @@
   }
   #chat .you .triangle {
     border-color: transparent transparent #58b666 transparent;
-    margin-left: 20px;
+    margin-left: 15px;
   }
   #chat .me .triangle {
     border-color: transparent transparent rgb(228, 93, 43) transparent;
     margin-left: 100%;
-    right: 32px;
+    right: 25px;
     position: relative;
   }
   
@@ -383,6 +383,11 @@
   .userButton{
     float: right;
     font-size: small;
+    margin-left: 10px;
+    font-size: small;
+    border: 2px solid  rgb(228, 93, 43);;
+    border-radius: 10px;
+    padding: auto;
   }
   
   #chat-form {
@@ -540,10 +545,13 @@
 }
 
 .delete{
-  margin: 4px;
+  margin-left: 10px;
   font-size: small;
+  height: 20px;
+  width: 20px;
+  border: 2px solid red;
+  border-radius: 10px;
 }
-
 
 
 /* buger button */

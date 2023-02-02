@@ -104,6 +104,11 @@
         </ul>
         
         <footer class="formholder">
+          <form enctype="multipart/form-data" id="uploadFile" method="post">
+            <input type="file" name="file" id="sendFile">
+            <button type="submit">send file</button>
+          </form>
+
           <form id="chat-form">
             <input class="chatbar" name="message" placeholder="Type your message"/>
             <button class="btn bg-warning sendchat" type="submit">Send</button>
@@ -111,7 +116,8 @@
         </footer>
       </main>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.6/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.6/axios.min.js"  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
     <script src="../js/chat.js"></script>
   </body>
 </html>

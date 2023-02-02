@@ -22,53 +22,56 @@ exports.sendMessage = async (req, res, next) => {
             message: message,
             groupId: groupId
         })
-        // const name = req.user.name;
-        // data.dataValues.name = req.user.name;
-        
+
         const data = { message: result.message, createdAt: result.createdAt };
 
-        return res.status(200).json({ success: true, data});
+        return res.status(200).json({ success: true, data });
     } catch (err) {
         console.log(err);
-        return res.status(404).json({ success: false, error: err })
+        return res.status(500).json({ success: false, message: 'Something went wrong !' })
     }
 }
 
 
+
+const { Sequelize, Op } = require("sequelize");
+
 exports.getMessage = async (req, res, next) => {
+    try {
+        let msgId = req.query.lastMessageId;
+        let { groupId } = req.params;
+        console.log(`msgId`, msgId);
+        console.log(`groupid ==> ${groupId}`);
 
-    let msgId = req.query.lastMessageId;
-    let { groupId } = req.params;
-    console.log(`groupid ==> ${groupId}`);
+        let messages = await Chat.findAll({
+            attributes: ['id' , 'message' , 'createdAt'],
+            where : {
+                groupId : groupId,
+                id : { [Op.gt]: msgId}
+            },
+            include : [
+                {model : User, attributes: ['name' , 'id']}
+            ]
+        }  );
 
-    let messages = await Chat.findAll({
-        include: ['user'],
-        where: { groupId: groupId }
-    });
+        
+        console.table(JSON.parse(JSON.stringify(messages)));
+        
+        const arrayOfMessages = messages.map(ele => {
+            if(ele.user.id == req.user.id){
+                return { id : ele.id , message : ele.message , createdAt : ele.createdAt, name: ele.user.name, currentUser: 'same user'};
+            }
+            return { id : ele.id , message : ele.message , createdAt : ele.createdAt, name: ele.user.name};
+        })
+        // console.table(arrayOfMessages);
 
-    const { email } = req.user;
 
-    const msgs = [];
-    for (let i = 0; i < messages.length; i++) {
-        if (messages[i].id > msgId) {
-            msgs.push(messages[i]);
-        }
+        res.status(200).json({ success: true, arrayOfMessages });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ success: false, message: `Something went wrong` });
     }
 
-    console.log(`msgId`, msgId);
-    console.log(`message's length ==> ${msgs.length}`);
-
-    const data = msgs.map(chat => {
-        let currentUser;
-        if (chat.user.email === email) {
-            currentUser = 'Same user';
-        }
-        return { message: chat.message, name: chat.user.name, createdAt: chat.createdAt, currentUser: currentUser, id: chat.id };
-    })
-
-    // console.log(messages);
-
-    res.status(200).json({ success: true, messages: data });
 }
 
 
@@ -77,8 +80,6 @@ exports.addUser = async (req, res, next) => {
     try {
         const { groupId } = req.params;
         const { email } = req.body;
-
-
 
         if (!email) {
             return res.status(500).json({ success: false, message: `Bad request !` });
@@ -98,24 +99,16 @@ exports.addUser = async (req, res, next) => {
             return res.status(500).json({ success: false, message: `User doesn't exist !` });
         }
 
-        const alreadyInGroup = await UserGroup.findOne({ where: { userId: user.id, groupId: groupId } });
-
-        if (alreadyInGroup) {
-            return res.status(500).json({ success: false, message: `User already in group !` });
-        }
-
         const data = await UserGroup.create({
             userId: user.id,
             groupId: groupId,
             isAdmin: false
         })
 
-        // const group = await UserGroup.findOne({where : {groupId : groupId}});
-
         res.status(200).json({ success: true, message: 'User successfully added !', data });
     } catch (err) {
         console.log(err);
-        res.status(400).json({ success: false, message: `Something went wrong !` });
+        res.status(500).json({ success: false, message: `Something went wrong !` });
     }
 
 }
@@ -126,14 +119,14 @@ exports.addUser = async (req, res, next) => {
 exports.getUsers = async (req, res, next) => {
     const { groupId } = req.params;
 
-    try{
+    try {
         const data = await UserGroup.findAll({ where: { groupId: groupId } });
         const users = data.map(element => {
             return { id: element.userId, isAdmin: element.isAdmin };
         });
         const userDetails = [];
         let adminEmail = [];
-    
+
         for (let i = 0; i < users.length; i++) {
             const user = await User.findOne({ where: { id: users[i].id } });
             userDetails.push({ name: user.name, isAdmin: users[i].isAdmin, email: user.email });
@@ -141,11 +134,11 @@ exports.getUsers = async (req, res, next) => {
                 adminEmail.push(user.email);
             }
         }
-    
+
         res.status(200).json({ success: true, userDetails, adminEmail });
-    }catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(500).json({success: false, message: 'Something went wrong !'})
+        res.status(500).json({ success: false, message: 'Something went wrong !' })
     }
 }
 
@@ -156,16 +149,20 @@ exports.makeAdmin = async (req, res, next) => {
     const { groupId } = req.params;
 
     if (!email) {
-        return res.status(500).json({ success: false, message: 'bad request !' });
+        return res.status(400).json({ success: false, message: 'bad request !' });
     }
 
     try {
         const checkUserIsAdmin = await UserGroup.findOne({ where: { groupId: groupId, userId: req.user.id } });
         if (checkUserIsAdmin.isAdmin == false) {
-            return res.status(500).json({ success: false, message: `Only Admin have this permission !` });
+            return res.status(400).json({ success: false, message: `Only Admin have this permission !` });
         }
 
         const user = await User.findOne({ where: { email: email } });
+        if (!user) {
+            return res.status(400).json({ success: false, message: `this user doesn't exist in database !` });
+        }
+
         // console.log(user);
         const data = await UserGroup.update({
             isAdmin: true
@@ -175,7 +172,7 @@ exports.makeAdmin = async (req, res, next) => {
         res.status(200).json({ success: true, message: `Now ${user.name} is also Admin !` });
     } catch (err) {
         console.log(err);
-        return res.status(400).json({ success: false, message: 'Something went wrong !' });
+        return res.status(500).json({ success: false, message: 'Something went wrong !' });
     }
 }
 
@@ -189,7 +186,7 @@ exports.deleteUser = async (req, res, next) => {
     try {
 
         const checkUser = await UserGroup.findOne({ where: { groupId: groupId, userId: req.user.id } });
-        if(!checkUser){
+        if (!checkUser) {
             return res.status(500).json({ success: false, message: `You are no longer in group !` });
         }
 
@@ -206,6 +203,11 @@ exports.deleteUser = async (req, res, next) => {
         }
 
         const user = await User.findOne({ where: { email: email } });
+
+        const data = await UserGroup.findAll({where : { groupId : groupId , isAdmin : true}});
+        if(data.length>1){
+
+        }
         // console.log(user);
         const usergroup = await UserGroup.findOne({ where: { userId: user.id, groupId: groupId } });
         // console.log(usergroup);
@@ -213,9 +215,9 @@ exports.deleteUser = async (req, res, next) => {
         if (usergroup.isAdmin == false) {
             usergroup.destroy();
             return res.status(200).json({ success: true, message: `User ${user.name} is deleted successfully !` });
-        } else if(req.user.email == email){
+        } else if (req.user.email == email) {
             return res.status(500).json({ success: false, message: `Admin have to remove admin himself before leaving group !` });
-        }else{
+        } else {
             return res.status(500).json({ success: false, message: `first remove admin before deleting user: ${user.name} !` });
         }
 
@@ -256,4 +258,15 @@ exports.removeAdmin = async (req, res, next) => {
         res.status(400).json({ success: false, message: `Something went wrong !` });
     }
 
+}
+
+
+
+exports.sendFile = (req, res, next) => {
+    console.log(req.body);
+    console.log(req.params);
+    console.log(req.file);
+    const { groupId } = req.params;
+
+    res.status(200).json({ success: true });
 }

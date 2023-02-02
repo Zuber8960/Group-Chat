@@ -20,4 +20,6 @@ router.post('/deleteUser/:groupId' , authorization.authentication ,  chatControl
 
 router.post('/removeAdmin/:groupId' , authorization.authentication ,  chatController.removeAdmin);
 
+router.post('/sendFile/:groupId' , authorization.authentication , chatController.sendFile);
+
 module.exports = router;

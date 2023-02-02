@@ -6,6 +6,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
+
+
 app.use(cors({
     origin: '*'
 }));
@@ -36,13 +38,14 @@ Chat.belongsTo(User);//one to many relationship
 
 //many to many relationship
 User.belongsToMany(Group , {
-    through : UserGroup
+    through : UserGroup,
 });
 Group.belongsToMany(User , {
     through : UserGroup
 });
 
-Group.hasMany(Chat);
+
+Group.hasMany(Chat , { constraints : true, onDelete : 'CASCADE'});
 Chat.belongsTo(Group);//one to many relationship
 
 sequelize

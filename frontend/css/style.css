@@ -95,12 +95,19 @@ body {
 
 
 
-.group-name{
+.group-name,
+.other-group-name{
     text-align: center;
     font-size: medium;
     color: #636363;
     font-weight: 600;
     margin-bottom: 10px;
+}
+
+.group-name:hover,
+.other-group-name:hover{
+    cursor: pointer;
+    transform: scale(1.02);
 }
 
 .centered-form__box {
@@ -120,3 +127,17 @@ body {
     right: 0px;
     /* top: 40px; */
   }
+
+.delete,
+.join{
+    float: right;
+}
+
+.display{
+    text-align: center;
+    margin-bottom: 15px ;
+    font-size: medium;
+    font-weight: 600;
+    background-color: #5cb85c;
+    padding: 10px 0px;
+}

@@ -4,7 +4,7 @@ const backendAPIs = 'http://localhost:3000/user';
 form.addEventListener('click' , (e) => {
     if(e.target.classList.contains('signup')){
         e.preventDefault();
-        console.log('abcd');
+        // console.log('abcd');
         let name;
         const first_name = e.target.parentNode.parentNode.first_name.value.trim();
         const last_name = e.target.parentNode.parentNode.last_name.value.trim();
@@ -21,11 +21,11 @@ form.addEventListener('click' , (e) => {
             return alert('massword not matched');
         }
         const obj = {name, email, phonenumber, password};
-        console.log(obj);
+        // console.log(obj);
 
         axios.post(`${backendAPIs}/signup`, obj)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             if(res.data.message){
                 return alert(res.data.message);
             }
@@ -68,5 +68,6 @@ form.addEventListener('click' , (e) => {
             return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;
         });
     }
+
 })
 
