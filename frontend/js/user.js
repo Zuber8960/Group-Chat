@@ -1,5 +1,5 @@
 const form = document.getElementById('form');
-const backendAPIs = 'http://localhost:3000/user';
+const backendAPIs = 'http://3.83.227.86:3000/user';
 
 form.addEventListener('click' , (e) => {
     if(e.target.classList.contains('signup')){
@@ -43,10 +43,10 @@ form.addEventListener('click' , (e) => {
         const email = e.target.parentNode.parentNode.email.value.trim();
         const password = e.target.parentNode.parentNode.password.value;
         const obj = {email, password};
-        console.log(obj);
+        // console.log(obj);
         axios.post(`${backendAPIs}/login`, obj)
         .then(res => {
-            console.log(res);
+            // console.log(res);
             if(res.data.message){
                 return alert(res.data.message);
             }
@@ -66,6 +66,28 @@ form.addEventListener('click' , (e) => {
                 return alert(err.response.data.message);
             }
             return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;
+        });
+    }
+
+
+    if(e.target.classList.contains('forgot')){
+        return window.location.href = './password.html'
+    }
+
+    if(e.target.classList.contains('password')){
+        e.preventDefault();
+        console.log('hello password');
+        const email = e.target.parentNode.parentNode.email.value.trim();
+        console.log(email);
+
+        axios.post(`${backendAPIs}/password` , {email} )
+        .then(res => {
+            console.log(res);
+            alert(res.data.message);
+        })
+        .catch(err => {
+            console.log(err);
+            alert(err.response.data.message);
         });
     }
 

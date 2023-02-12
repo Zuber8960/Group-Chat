@@ -1,5 +1,5 @@
 const form = document.getElementById('form');
-const backendAPIs = 'http://localhost:3000/group';
+const backendAPIs = 'http://3.83.227.86:3000/group';
 const token = localStorage.getItem('token');
 const groups = document.getElementById('groups');
 const otherGroups = document.getElementById('otherGroups');
@@ -7,7 +7,7 @@ const otherGroups = document.getElementById('otherGroups');
 //getting all groups on screen
 window.addEventListener('DOMContentLoaded', async() => {
     const response = await axios.get(`${backendAPIs}/getGroup`, {headers : {'Authorization' : token} });
-    console.log(response.data);
+    // console.log(response.data);
 
     if(!response.data.groups.length){
        groups.style.display = "none";
@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', async() => {
     });
 
     const result = await axios.post(`${backendAPIs}/getAllGroups` , {groupsId : groupsId});
-    console.log(result.data);
+    // console.log(result.data);
     if(!result.data.allOtherGroups.length){
         return otherGroups.style.display = "none";
      }
@@ -41,24 +41,29 @@ window.addEventListener('DOMContentLoaded', async() => {
 //creating a group
 form.addEventListener('click' , async (e) => {
     if(e.target.classList.contains('group')){
-        e.preventDefault();
-        console.log('group=======>');
-
-        const group_name = e.target.parentNode.parentNode.group.value.trim();
-
-        const response = await axios.post(`${backendAPIs}/createGroup`, {group_name : group_name} , {headers : {'Authorization' : token} });
-        console.log(response);
-        e.target.parentNode.parentNode.group.value = null;
-
-        if(groups.style.display == 'none'){
-            groups.style.display = 'block';
+        try{
+            e.preventDefault();
+            const group_name = e.target.parentNode.parentNode.group.value.trim();
+    
+            const response = await axios.post(`${backendAPIs}/createGroup`, {group_name : group_name} , {headers : {'Authorization' : token} });
+            // console.log(response);
+            e.target.parentNode.parentNode.group.value = null;
+    
+            if(groups.style.display == 'none'){
+                groups.style.display = 'block';
+            }
+    
+            groups.innerHTML += `
+            <div  class="group-name" id="${response.data.id}">${response.data.name}
+                <button class="delete"">delete</button>
+            </div>
+            `
+            alert('Group has created successfully !');
+        }catch(err){
+            console.log(err);
+            alert(err.response.data.message);
         }
-
-        groups.innerHTML += `
-        <div  class="group-name" id="${response.data.id}">${response.data.name}
-            <button class="delete"">delete</button>
-        </div>
-        `
+        
     }
 })
 
@@ -85,7 +90,7 @@ groups.addEventListener('click' , async (e) => {
                 alert(response.data.message);
         
             }catch(err){
-                console.log(err);
+                // console.log(err);
                 alert(err.response.data.message);
             }
         }
@@ -99,7 +104,7 @@ otherGroups.addEventListener('click' , async (e) => {
         const name = e.target.parentNode.innerText.split('\n')[0];
         const id = e.target.parentNode.id;
         const result = await axios.get(`${backendAPIs}/join/${id}` , { headers : {'Authorization' : token} });
-        console.log(result);
+        // console.log(result);
 
         e.target.parentNode.remove();
 

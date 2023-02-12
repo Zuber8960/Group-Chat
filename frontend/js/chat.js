@@ -1,5 +1,5 @@
 const form = document.getElementById('chat-form');
-const backendAPIs = 'http://localhost:3000/chat';
+const backendAPIs = 'http://3.83.227.86:3000/chat';
 const chat = document.getElementById('chat');
 const searchBoxForm = document.getElementById('form-group');
 
@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const response = await axios.get(`${backendAPIs}/getMessage/${groupId}?lastMessageId=${lastMessageId}`, { headers: { 'Authorization': token } });
     // console.log(response.data);
     const backendArray = response.data.arrayOfMessages;
-    console.log(backendArray);
+    // console.log(backendArray);
 
     if (message) {
         chatArray = message.concat(backendArray);
@@ -41,8 +41,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    if (chatArray.length > 20) {
-        chatArray = chatArray.slice(chatArray.length - 20);
+    if (chatArray.length > 50) {
+        chatArray = chatArray.slice(chatArray.length - 50);
     }
 
     const localStorageMessages = JSON.stringify(chatArray);
@@ -306,21 +306,21 @@ async function removeAdmin(email) {
     }
 }
 
-const upload = document.getElementById('uploadFile');
+// const upload = document.getElementById('uploadFile');
 
-upload.addEventListener('submit' , async (e) => {
-    e.preventDefault();
-    let file = e.target.firstElementChild.files[0];
-    console.log(file);
-    const formData = new FormData(upload);
+// upload.addEventListener('submit' , async (e) => {
+//     e.preventDefault();
+//     let file = e.target.firstElementChild.files[0];
+//     console.log(file);
+//     const formData = new FormData(upload);
 
-    // // formData.append('username', 'Zuber');
-    // formData.append('file' , file);
+//     // // formData.append('username', 'Zuber');
+//     // formData.append('file' , file);
 
-    console.log(formData);
-    const data = await axios.post(`${backendAPIs}/sendFile/${groupId}` , formData , { headers: { 'Authorization': token , "Content-Type" : "multipart/form-data"  } });
-    console.log(data);
-})
+//     console.log(formData);
+//     const data = await axios.post(`${backendAPIs}/sendFile/${groupId}` , formData , { headers: { 'Authorization': token , "Content-Type" : "multipart/form-data"  } });
+//     console.log(data);
+// })
 
 
 

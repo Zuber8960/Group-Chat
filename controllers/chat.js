@@ -52,7 +52,7 @@ exports.getMessage = async (req, res, next) => {
             include : [
                 {model : User, attributes: ['name' , 'id']}
             ]
-        }  );
+        });
 
         
         console.table(JSON.parse(JSON.stringify(messages)));
@@ -97,6 +97,10 @@ exports.addUser = async (req, res, next) => {
         const user = await User.findOne({ where: { email: email } });
         if (!user) {
             return res.status(500).json({ success: false, message: `User doesn't exist !` });
+        }
+        const alreadyInGroup = await UserGroup.findOne({ where : {userId : user.id, groupId: groupId}});
+        if(alreadyInGroup){
+            return res.status(500).json({ success: false, message: `User is already in group !` });
         }
 
         const data = await UserGroup.create({
@@ -187,44 +191,37 @@ exports.deleteUser = async (req, res, next) => {
 
         const checkUser = await UserGroup.findOne({ where: { groupId: groupId, userId: req.user.id } });
         if (!checkUser) {
-            return res.status(500).json({ success: false, message: `You are no longer in group !` });
+            return res.status(400).json({ success: false, message: `You are no longer in group !` });
         }
 
+        const allAdmins = await UserGroup.findAll({ where: { groupId: groupId, isAdmin: true } });
+        
+        //if user try to delete himself.
+        if (req.user.email == email && allAdmins.length>1) {
+            await checkUser.destroy();
+            return res.status(200).json({ success: true, message: `User has been deleted from group !` });
+        }
         //check whether user is admin or not.
         if (checkUser.isAdmin == false) {
-            //if user try to delete ourself.
-
-            if (req.user.email == email) {
-                await checkUser.destroy();
-                return res.status(200).json({ success: true, message: `User has been deleted from group !` });
-            }
-
-            return res.status(500).json({ success: false, message: `Only admin can delete members from groups !` });
+            return res.status(400).json({ success: false, message: `Only admin can delete members from groups !` });
         }
-
+        
         const user = await User.findOne({ where: { email: email } });
 
-        const data = await UserGroup.findAll({where : { groupId : groupId , isAdmin : true}});
-        if(data.length>1){
-
-        }
         // console.log(user);
         const usergroup = await UserGroup.findOne({ where: { userId: user.id, groupId: groupId } });
         // console.log(usergroup);
 
-        if (usergroup.isAdmin == false) {
+        if (usergroup && allAdmins.length>1) {
             usergroup.destroy();
             return res.status(200).json({ success: true, message: `User ${user.name} is deleted successfully !` });
-        } else if (req.user.email == email) {
-            return res.status(500).json({ success: false, message: `Admin have to remove admin himself before leaving group !` });
-        } else {
-            return res.status(500).json({ success: false, message: `first remove admin before deleting user: ${user.name} !` });
+        } else if (allAdmins.length<=1) {
+            return res.status(400).json({ success: false, message: `Make another user as an Admin !` });
         }
-
 
     } catch (err) {
         console.log(err);
-        res.status(400).json({ success: false, message: `Something went wrong !` });
+        res.status(500).json({ success: false, message: `Something went wrong !` });
     }
 
 }

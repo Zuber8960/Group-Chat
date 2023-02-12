@@ -23,6 +23,7 @@ const User = require('./models/user');
 const Chat = require('./models/chat');
 const Group = require('./models/group');
 const UserGroup = require('./models/usergroup');
+const Forgotpassword = require('./models/forgotpassword');
 
 const userRouter = require('./routes/user');
 const chatRouter = require('./routes/chat');
@@ -35,6 +36,9 @@ app.use('/group', groupRouter);
 
 User.hasMany(Chat);
 Chat.belongsTo(User);//one to many relationship
+
+User.hasMany(Forgotpassword);//one to many relationship
+Forgotpassword.belongsTo(User); 
 
 //many to many relationship
 User.belongsToMany(Group , {

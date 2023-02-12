@@ -5,21 +5,25 @@ const User = require('../models/user');
 
 
 exports.createGroup = async (req, res, next) => {
-    const {group_name} = req.body;
-
-    const group = await req.user.createGroup({
-        name: group_name
-    }, {through: {isAdmin : true}})
-
-    console.log(`success ===>group`);
-    return res.status(200).json({success : true, name: group.name , id:group.id});
+    try{
+        const {group_name} = req.body;
+    
+        const group = await req.user.createGroup({
+            name: group_name
+        }, {through: {isAdmin : true}})
+    
+        console.log(`success ===>group`);
+        return res.status(200).json({success : true, name: group.name , id:group.id});
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({success : false, message: 'Something went wrong !'});
+    }
 }
 
 
 exports.getGroups= async (req, res, next) => {
 
     try{
-
         const arrayOfGroups = await req.user.getGroups({
             attributes : ["id" , "name"]
         });
@@ -40,53 +44,64 @@ exports.getGroups= async (req, res, next) => {
 
 
 exports.deleteGroup = async (req, res, next) => {
-    
-    const {id} = req.params;
-    console.log(req.params, req.user.id);
-    
-    const memberIsAdmin = await UserGroup.findOne({where : {groupId: id, userId : req.user.id , isAdmin: true}});
-    if(!memberIsAdmin){
-        return res.status(400).json({success : false ,message : `Only Admin can delete group !`});
-    }
-    
-    if(memberIsAdmin){
-        const group = await Group.destroy({where : { id : id}});
+    try{
+        const {id} = req.params;
+        console.log(req.params, req.user.id);
+        
+        const memberIsAdmin = await UserGroup.findOne({where : {groupId: id, userId : req.user.id , isAdmin: true}});
+        if(!memberIsAdmin){
+            return res.status(400).json({success : false ,message : `Only Admin can delete group !`});
+        }
 
-        return res.status(200).json({success : true ,message : `Group has deleted sucessfully`});
+        if(memberIsAdmin){
+            const group = await Group.destroy({where : { id : id}});
+            return res.status(200).json({success : true ,message : `Group has deleted sucessfully`});
+        }
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({success: false, message : `Something went wrong !`});
     }
-    return res.status(500).json({success: false, message : `Something went wrong !`});
 }
 
-
+const {Sequelize, Op} = require('sequelize');
 
 exports.getAllGroups = async (req, res, next) => {
-    console.log(req.body);
-    const {groupsId} = req.body;
-
-    const allGroups = await Group.findAll({
-        attributes : ['id' , 'name']
-    })
-
+    try{
+        console.log(req.body);
+        const {groupsId} = req.body;
     
-    const allOtherGroups = JSON.parse(JSON.stringify(allGroups)).filter( ele => {
-        if(groupsId.includes(ele.id) == false){
-            return ele
-        };
-    });
-    console.table(allOtherGroups);
+        const allOtherGroups = await Group.findAll({
+            where: {
+                id: { [Sequelize.Op.notIn]: groupsId}
+            },
+            attributes : ['id' , 'name']
     
-    res.status(200).json({success:true , allOtherGroups});
+        })
+    
+        console.table(allOtherGroups);
+        
+        res.status(200).json({success:true , allOtherGroups});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({success:false , message: `Something went wrong !`});
+    }
 }
 
 
 exports.joinGroup = async (req, res, next) => {
-    console.log(req.params);
+    try{
+        console.log(req.params);
 
-    const update = await UserGroup.create({
-        groupId : req.params.id,
-        userId : req.user.id,
-        isAdmin : false
-    })
-
-    res.status(200).json({success: true , message : `Congratulations ! Now you are in the group`});
+        const update = await UserGroup.create({
+            groupId : req.params.id,
+            userId : req.user.id,
+            isAdmin : false
+        })
+    
+        res.status(200).json({success: true , message : `Congratulations ! Now you are in the group`});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({success:false , message: `Something went wrong !`});
+    }
+    
 }
