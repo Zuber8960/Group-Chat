@@ -12,10 +12,16 @@ let username = localStorage.getItem('username');
 let chatArray = [];
 let lastMessageId;
 
-// setInterval(function() {
-//     location.reload();
-//  }, 8000);
+const timerDisplay = document.querySelector("#timer");
+let count = 11;
 
+const countDown = setInterval(() => {
+count--;
+timerDisplay.textContent = count;
+    if (count === 0) {
+        return location.reload();
+    }
+}, 1000);
 
 window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('groupname').innerText = groupName;
@@ -52,6 +58,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     // console.log(`messages===>`, JSON.parse(localStorage.getItem(`messages${groupId}`)));
 
     chatArray.forEach(ele => {
+        // console.log(ele.message);
         if (ele.currentUser) {
             showMyMessageOnScreen(ele);
         } else {
@@ -78,7 +85,6 @@ form.addEventListener('click', async (e) => {
             }
             return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;
         }
-
     }
 })
 
@@ -87,8 +93,6 @@ searchBoxForm.addEventListener('click', async (e) => {
     if (e.target.classList.contains('search-btn')) {
         try {
             e.preventDefault();
-            // console.log('searchBTN');
-            // console.log(e.target.parentNode.email.value);
             const email = e.target.parentNode.email.value.trim();
             const response = await axios.post(`${backendAPIs}/addUser/${groupId}`, { email: email }, { headers: { 'Authorization': token } });
 
@@ -109,7 +113,10 @@ searchBoxForm.addEventListener('click', async (e) => {
 function showMyMessageOnScreen(obj) {
     const timeForUser = time(obj.createdAt);
     const dateOfUser = date(obj.createdAt);
-    chat.innerHTML += `
+    let message = obj.message.indexOf('http');
+    if(message == -1){
+        message = obj.message;
+        chat.innerHTML += `
             <li class="me">
             <div class="entete">
               <h3>${timeForUser}, ${dateOfUser}</h3>
@@ -118,10 +125,28 @@ function showMyMessageOnScreen(obj) {
             </div>
             <div class="triangle"></div>
             <div class="message">
-              ${obj.message}
+              ${message}
             </div>
           </li>
           `
+    }else{
+        message = obj.message;
+        chat.innerHTML += `
+            <li class="me">
+            <div class="entete">
+              <h3>${timeForUser}, ${dateOfUser}</h3>
+              <h2>${username}</h2>
+              <span class="status blue"></span>
+            </div>
+            <div class="triangle"></div>
+            <div class="message">
+              <a href="${message}">${message}</a>
+            </div>
+          </li>
+          `
+    }
+    
+    
 }
 
 function showOtherMessgeOnScreen(obj) {
@@ -178,22 +203,6 @@ burgerButton.addEventListener("click", function() {
     openBox();
 });
 
-
-// //burger-button funtionallity
-// const menuBtn = document.querySelector('.menu-btn');
-// let menuOpen = false;
-// menuBtn.addEventListener('click', () => {
-//     if (!menuOpen) {
-//         menuBtn.classList.add('open');
-//         openBox();
-//         menuOpen = true;
-//     }
-//     else {
-//         menuBtn.classList.remove('open');
-//         menuOpen = false;
-//         allName.innerHTML = "";
-//     }
-// })
 
 let numOfUsers;
 async function openBox() {
