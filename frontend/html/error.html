@@ -5,7 +5,7 @@
     <title>Error Page</title>
     <style>
       body {
-        background: url('http://3.83.227.86:3000/img/gif.gif') no-repeat center center fixed;
+        background: url('http://localhost:3000/img/gif.gif') no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -26,23 +26,27 @@
         top: 10px;
         right: 10px;
       }
-      header div button{
+      header div button,
+      header button{
         padding: 5px;
         background-color: rgb(21, 12, 65);
         color: #fff;
       }
-      header div button:hover{
+      header div button:hover,
+      header button:hover{
         transform: scale(1.05);
         background-color: aliceblue;
         color: #000;
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
     <header>
+      <a href="http://localhost:3000"><button>Homepage</button></a>
       <div>
-        <a href="http://3.83.227.86:3000/html/signup.html"><button>Signup</button></a>
-        <a href="http://3.83.227.86:3000/html/login.html"><button>Logging in</button></a>
+        <a href="http://localhost:3000/html/signup.html"><button>Signup</button></a>
+        <a href="http://localhost:3000/html/login.html"><button>Logging in</button></a>
       </div>
     </header>
         <h1 id="greeting">Oops Something went wrong !</h1>
