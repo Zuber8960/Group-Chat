@@ -1,5 +1,5 @@
 const form = document.getElementById('form');
-const backendAPIs = 'http://localhost:3000/user';
+const backendAPIs = 'http://3.83.227.86:3000/user';
 
 form.addEventListener('click' , (e) => {
     if(e.target.classList.contains('signup')){

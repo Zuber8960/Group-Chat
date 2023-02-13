@@ -1,5 +1,5 @@
 const form = document.getElementById('chat-form');
-const backendAPIs = 'http://localhost:3000/chat';
+const backendAPIs = 'http://3.83.227.86:3000/chat';
 const chat = document.getElementById('chat');
 const searchBoxForm = document.getElementById('form-group');
 

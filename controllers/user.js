@@ -114,7 +114,7 @@ exports.password = async(req, res, next) => {
             subject: "Change Password",
             textContent: "Send a reset password mail",
             htmlContent: `
-            <a href="http://localhost:3000/user/resetpassward/${id}">Reset password</a>
+            <a href="http://3.83.227.86:3000/user/resetpassward/${id}">Reset password</a>
             `,
         })
     
@@ -181,7 +181,7 @@ exports.updatePassword = async (req, res, next) => {
         <html>
             <script>
                 alert('Password has been changed successfully');
-                window.location.href = 'http://localhost:3000/html/login.html'
+                window.location.href = 'http://3.83.227.86:3000/html/login.html'
             </script>
         </html>
         `);
