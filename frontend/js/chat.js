@@ -12,18 +12,17 @@ let username = localStorage.getItem('username');
 let chatArray = [];
 let lastMessageId;
 
-const timerDisplay = document.querySelector("#timer");
-let count = 11;
 
-const countDown = setInterval(() => {
-count--;
-timerDisplay.textContent = count;
-    if (count === 0) {
-        return location.reload();
-    }
-}, 1000);
+setInterval(async () => {
+    chatArray = [];
+    chat.innerHTML = "";
+    await dom();
+    chat.scrollTo(0, chat.scrollHeight);
+}, 4000);
 
-window.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('DOMContentLoaded', dom());
+
+async function dom(){
     document.getElementById('groupname').innerText = groupName;
     document.getElementById('username').innerText = `Hey! ${username.split(" ")[0]}`;
 
@@ -65,7 +64,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             showOtherMessgeOnScreen(ele);
         }
     });
-})
+}
 
 form.addEventListener('click', async (e) => {
     if (e.target.classList.contains('sendchat')) {
@@ -75,7 +74,7 @@ form.addEventListener('click', async (e) => {
 
             const response = await axios.post(`${backendAPIs}/sendMessage/${groupId}`, { message: message }, { headers: { 'Authorization': token } });
             console.log(response.data);
-            showMyMessageOnScreen(response.data.data);
+            // showMyMessageOnScreen(response.data.data);
             e.target.parentNode.message.value = null;
 
         } catch (err) {
@@ -113,9 +112,7 @@ searchBoxForm.addEventListener('click', async (e) => {
 function showMyMessageOnScreen(obj) {
     const timeForUser = time(obj.createdAt);
     const dateOfUser = date(obj.createdAt);
-    let message = obj.message.indexOf('http');
-    if(message == -1){
-        message = obj.message;
+    if(obj.message.indexOf('https://') == 0 || obj.message.indexOf('http://') == 0){
         chat.innerHTML += `
             <li class="me">
             <div class="entete">
@@ -125,12 +122,11 @@ function showMyMessageOnScreen(obj) {
             </div>
             <div class="triangle"></div>
             <div class="message">
-              ${message}
+                <a href="${obj.message}">${obj.message}</a>
             </div>
           </li>
           `
     }else{
-        message = obj.message;
         chat.innerHTML += `
             <li class="me">
             <div class="entete">
@@ -140,7 +136,7 @@ function showMyMessageOnScreen(obj) {
             </div>
             <div class="triangle"></div>
             <div class="message">
-              <a href="${message}">${message}</a>
+              ${obj.message}
             </div>
           </li>
           `
@@ -153,19 +149,36 @@ function showOtherMessgeOnScreen(obj) {
     const timeForUser = time(obj.createdAt);
     const dateOfUser = date(obj.createdAt);
 
-    chat.innerHTML += `
-            <li class="you">
-                <div class="entete">
-                    <span class="status green"></span>
-                    <h2>${obj.name}</h2>
-                    <h3>${timeForUser}, ${dateOfUser}</h3>
-                </div>
-                <div class="triangle"></div>
-                <div class="message">
-                    ${obj.message}
-                </div>
-            </li>
-          `
+    if(obj.message.indexOf('https://') == 0 || obj.message.indexOf('http://') == 0){
+        chat.innerHTML += `
+        <li class="you">
+            <div class="entete">
+                <span class="status green"></span>
+                <h2>${obj.name}</h2>
+                <h3>${timeForUser}, ${dateOfUser}</h3>
+            </div>
+            <div class="triangle"></div>
+            <div class="message">
+                <a href="${obj.message}">${obj.message}</a>
+            </div>
+        </li>
+      `
+    }else{
+        chat.innerHTML += `
+        <li class="you">
+            <div class="entete">
+                <span class="status green"></span>
+                <h2>${obj.name}</h2>
+                <h3>${timeForUser}, ${dateOfUser}</h3>
+            </div>
+            <div class="triangle"></div>
+            <div class="message">
+                ${obj.message}
+            </div>
+        </li>
+      `
+    }
+    
 }
 
 
