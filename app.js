@@ -28,11 +28,15 @@ const Forgotpassword = require('./models/forgotpassword');
 const userRouter = require('./routes/user');
 const chatRouter = require('./routes/chat');
 const groupRouter = require('./routes/group');
+const homeConroller = require('./controllers/home');
+const errorConroller = require('./controllers/error');
 
 app.use('/user', userRouter);
 app.use('/chat', chatRouter);
 app.use('/group', groupRouter);
 
+app.get('/',homeConroller.home);
+app.use(errorConroller.get404);
 
 User.hasMany(Chat);
 Chat.belongsTo(User);//one to many relationship

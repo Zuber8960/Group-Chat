@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Error Page</title>
+    <style>
+      body {
+        background: url('../img/gif.gif') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
+      
+      #greeting {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        font-size: 50px;
+      }
+
+      header div{
+        position: fixed;
+        top: 10px;
+        right: 10px;
+      }
+      header div button{
+        padding: 5px;
+        background-color: rgb(21, 12, 65);
+        color: #fff;
+      }
+      header div button:hover{
+        transform: scale(1.05);
+        background-color: aliceblue;
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <a href="./html/signup.html"><button>Signup</button></a>
+        <a href="./html/login.html"><button>Logging in</button></a>
+      </div>
+    </header>
+        <h1 id="greeting">Oops Something went wrong !</h1>
+  </body>
+</html>
