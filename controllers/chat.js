@@ -197,28 +197,31 @@ exports.deleteUser = async (req, res, next) => {
         const allAdmins = await UserGroup.findAll({ where: { groupId: groupId, isAdmin: true } });
         
         //if user try to delete himself.
-        if (req.user.email == email && allAdmins.length>1) {
+        if (req.user.email == email && !checkUser.isAdmin) {
             await checkUser.destroy();
             return res.status(200).json({ success: true, message: `User has been deleted from group !` });
         }
-        //check whether user is admin or not.
+        if (req.user.email == email) {
+            if(allAdmins.length>1){
+                await checkUser.destroy();
+                return res.status(200).json({ success: true, message: `User has been deleted from group !` });
+            }else{
+                return res.status(400).json({ success: false, message: `Make another user as an Admin !` });
+            }
+        }
+
+        //check whether user is not an admin.
         if (checkUser.isAdmin == false) {
             return res.status(400).json({ success: false, message: `Only admin can delete members from groups !` });
         }
         
         const user = await User.findOne({ where: { email: email } });
-
-        // console.log(user);
         const usergroup = await UserGroup.findOne({ where: { userId: user.id, groupId: groupId } });
-        // console.log(usergroup);
 
-        if (usergroup && allAdmins.length>1) {
+        if (usergroup) {
             usergroup.destroy();
             return res.status(200).json({ success: true, message: `User ${user.name} is deleted successfully !` });
-        } else if (allAdmins.length<=1) {
-            return res.status(400).json({ success: false, message: `Make another user as an Admin !` });
         }
-
     } catch (err) {
         console.log(err);
         res.status(500).json({ success: false, message: `Something went wrong !` });

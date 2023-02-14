@@ -60,9 +60,13 @@ form.addEventListener('click' , (e) => {
         .catch(err => {
             console.log(err);
             if(err.response.status === 404){
+                e.target.parentNode.parentNode.email.value = null;
+                e.target.parentNode.parentNode.password.value = null;
                 return alert(err.response.data.message);
             }
             if(err.response.status === 401){
+                e.target.parentNode.parentNode.email.value = null;
+                e.target.parentNode.parentNode.password.value = null;
                 return alert(err.response.data.message);
             }
             return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;

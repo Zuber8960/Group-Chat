@@ -141,3 +141,22 @@ body {
     background-color: #5cb85c;
     padding: 10px 0px;
 }
+
+
+header button{
+    font-size: 20px;
+    margin: 5px;
+    right: 0px;
+    position: fixed;
+    padding: 10px;
+    background-color: rgb(30, 170, 189);
+    border-radius: 2rem;
+    color: #fff;
+}
+header button:hover{
+    transform: scale(1.05);
+    transition: 0.5s;
+    background-color: aliceblue;
+    cursor: pointer;
+    color: #000;
+}

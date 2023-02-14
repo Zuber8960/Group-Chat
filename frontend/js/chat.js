@@ -13,13 +13,15 @@ let chatArray = [];
 let lastMessageId;
 
 
+//for each 8 sec getting all messages store it on local storage as well as on frontend.
 setInterval(async () => {
     chatArray = [];
     chat.innerHTML = "";
     await dom();
     chat.scrollTo(0, chat.scrollHeight);
-}, 4000);
+}, 5000);
 
+//whenever page refresh sending last messageId of perticular group to backend and getting all messages with respective group.
 window.addEventListener('DOMContentLoaded', dom());
 
 async function dom(){
@@ -56,6 +58,7 @@ async function dom(){
 
     // console.log(`messages===>`, JSON.parse(localStorage.getItem(`messages${groupId}`)));
 
+    //displau all messages on frontend.
     chatArray.forEach(ele => {
         // console.log(ele.message);
         if (ele.currentUser) {
@@ -66,6 +69,8 @@ async function dom(){
     });
 }
 
+
+//whenever sending messages in group.
 form.addEventListener('click', async (e) => {
     if (e.target.classList.contains('sendchat')) {
         try {
@@ -87,7 +92,7 @@ form.addEventListener('click', async (e) => {
     }
 })
 
-
+//to add user inside group by searching his email in input box.
 searchBoxForm.addEventListener('click', async (e) => {
     if (e.target.classList.contains('search-btn')) {
         try {
@@ -108,7 +113,7 @@ searchBoxForm.addEventListener('click', async (e) => {
     }
 })
 
-
+//function for my message will display on screen.
 function showMyMessageOnScreen(obj) {
     const timeForUser = time(obj.createdAt);
     const dateOfUser = date(obj.createdAt);
@@ -141,10 +146,9 @@ function showMyMessageOnScreen(obj) {
           </li>
           `
     }
-    
-    
 }
 
+//function for other's messages will display on screen.
 function showOtherMessgeOnScreen(obj) {
     const timeForUser = time(obj.createdAt);
     const dateOfUser = date(obj.createdAt);
@@ -181,12 +185,13 @@ function showOtherMessgeOnScreen(obj) {
     
 }
 
-
+//convert string to getting time in 11:06 PM formet.
 function time(string) {
     const time_object = new Date(string);
     return time_object.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 }
 
+//convert string to getting date/Today/Yesterday.
 function date(string) {
     const today = new Date();
     const date_object = new Date(string);
@@ -204,7 +209,7 @@ function date(string) {
     return date_object.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
 
-
+//burger button functionallity
 const allName = document.getElementById('group');
 
 const burgerButton = document.querySelector(".burger-button");
@@ -217,6 +222,7 @@ burgerButton.addEventListener("click", function() {
 });
 
 
+//getting all users and admin details.
 let numOfUsers;
 async function openBox() {
     const users = await axios.get(`${backendAPIs}/getUsers/${groupId}`);
@@ -238,7 +244,7 @@ async function openBox() {
 
 }
 
-
+//if user is an Admin
 function displayNameForAdmin(user) {
     if (user.isAdmin) {
         allName.innerHTML += `
@@ -254,7 +260,7 @@ function displayNameForAdmin(user) {
     }
 }
 
-
+//if user is not Admin.
 function displayNameForOther(user) {
     if (user.isAdmin) {
         allName.innerHTML += `
@@ -274,6 +280,7 @@ function displayNameForOther(user) {
     }
 }
 
+//making another user as an Admin.
 async function makeAdmin(email) {
     // console.log(email);
     try {
@@ -290,7 +297,7 @@ async function makeAdmin(email) {
 
 }
 
-
+//delete admin functionallity from any Admin user.
 async function deleteUser(email) {
     if (confirm('Are you sure')) {
         try {
@@ -310,7 +317,7 @@ async function deleteUser(email) {
     }
 }
 
-
+//delete user from the group.
 async function removeAdmin(email) {
     try {
         if(confirm(`Are you sure ?`)){
@@ -348,7 +355,7 @@ async function removeAdmin(email) {
 
 
 
-
+//logout functionality
 function logout(){
     if(confirm('Are you sure ?')){
         localStorage.clear();
