@@ -114,7 +114,7 @@ exports.password = async(req, res, next) => {
             subject: "Change Password",
             textContent: "Send a reset password mail",
             htmlContent: `
-            <a href="http://3.83.227.86:3000/user/resetpassward/${id}">Reset password</a>
+            <a href="http://3.83.227.86/user/resetpassward/${id}">Reset password</a>
             `,
         })
     
@@ -127,6 +127,7 @@ exports.password = async(req, res, next) => {
     }
 }
 
+const path =require('path');
 
 exports.resetPassword = async (req, res, next) => {
     try{
@@ -135,23 +136,73 @@ exports.resetPassword = async (req, res, next) => {
         const data = await Forgotpassword.findOne({where : {id: id , isActive : true}});
     
         if(!data){
-            return res.status(400).send(`
-                    <html>
-                        <h1>Oops ! Link has been expired. <hr> generate another link.</h1>
-                    </html>
-                    `);
+            return res.status(500).sendFile(path.join(__dirname,'../','frontend/html/error2.html'))
         }
     
         await data.update({isActive : false})
     
         res.status(200).send(`
-        <html>
-            <form action="/user/updatepassword/${id}" method="get">
-                <label for="newpassword">Enter New password</label>
-                <input name="newpassword" type="password"></input>
-                <button>Reset Password</button>
-            </form>
-        </html>
+            <html>
+                <head>
+                <title>Reset Password Page</title>
+                    <style>
+                        body{
+                            background-color: #45a049;
+                        }
+                    
+                        form {
+                                top: 200px;
+                                right: 120px;
+                                position: fixed;
+                                max-width: 300px;
+                                margin: 0 auto;
+                                background-color: rgb(25, 90, 99);
+                                padding: 50px 40px 50px 50px;
+                                border-radius: 5px;
+                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                            }
+                        label{
+                            color: #fff;
+                            font-weight: bold;
+                            font-size: 20px;
+                        }
+
+                        input[type="password"] {
+                            width: 100%;
+                            padding: 12px 20px;
+                            margin: 8px 0;
+                            display: inline-block;
+                            border: 1px solid #ccc;
+                            border-radius: 4px;
+                            box-sizing: border-box;
+                        }
+
+                        input[type="submit"] {
+                            width: 100%;
+                            background-color: #4CAF50;
+                            color: #fff;
+                            padding: 12px 20px;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                        }
+
+                        input[type="submit"]:hover {
+                            background-color: #45a049;
+                        }
+                    </style>
+                </head>
+
+                <body>
+                    <img src="http://3.83.227.86:3000/img/n3.gif" alt="">
+                    <form action="/user/updatepassword/${id}" method="get">
+                        <label for="newpassword">Enter New password</label>
+                        <input name="newpassword" type="password" placeholder="Enter new password"></input>
+                        <input type="submit" value="Submit">
+                    </form>
+                </body>
+
+            </html>
         `);
     }catch(err){
         console.log(err);
@@ -181,7 +232,7 @@ exports.updatePassword = async (req, res, next) => {
         <html>
             <script>
                 alert('Password has been changed successfully');
-                window.location.href = 'http://3.83.227.86:3000/html/login.html'
+                window.location.href = 'http://3.83.227.86/html/login.html'
             </script>
         </html>
         `);

@@ -76,15 +76,15 @@ form.addEventListener('click', async (e) => {
         try {
             e.preventDefault();
             const message = e.target.parentNode.message.value;
-
             const response = await axios.post(`${backendAPIs}/sendMessage/${groupId}`, { message: message }, { headers: { 'Authorization': token } });
             console.log(response.data);
-            // showMyMessageOnScreen(response.data.data);
+            showMyMessageOnScreen(response.data.data);
             e.target.parentNode.message.value = null;
 
         } catch (err) {
             console.log(err);
             if (err.response.status == 400) {
+                e.target.parentNode.message.value = null;
                 return alert(err.response.data.message);
             }
             return document.body.innerHTML += `<div class="error">Something went wrong !</div>`;
