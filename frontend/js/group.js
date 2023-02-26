@@ -1,5 +1,5 @@
 const form = document.getElementById('form');
-const backendAPIs = 'http://localhost:3000/group';
+const backendAPIs = 'http://3.83.227.86:3000/group';
 const token = localStorage.getItem('token');
 const groups = document.getElementById('groups');
 const otherGroups = document.getElementById('otherGroups');
