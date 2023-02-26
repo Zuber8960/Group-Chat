@@ -12,14 +12,11 @@ let username = localStorage.getItem('username');
 let chatArray = [];
 let lastMessageId;
 
-
-//for each 8 sec getting all messages store it on local storage as well as on frontend.
+let flag = true;
+//for each 5 sec getting all messages store it on local storage as well as on frontend.
 setInterval(async () => {
-    chatArray = [];
-    chat.innerHTML = "";
     await dom();
-    chat.scrollTo(0, chat.scrollHeight);
-}, 5000);
+}, 2000);
 
 //whenever page refresh sending last messageId of perticular group to backend and getting all messages with respective group.
 window.addEventListener('DOMContentLoaded', dom());
@@ -40,13 +37,19 @@ async function dom(){
     // console.log(response.data);
     const backendArray = response.data.arrayOfMessages;
     // console.log(backendArray);
+    if(flag == false && backendArray.length==0){
+        return ;
+    }else{
+        chatArray = [];
+        chat.innerHTML = "";
+    }
 
     if (message) {
         chatArray = message.concat(backendArray);
     } else {
         chatArray = chatArray.concat(backendArray);
     }
-
+    
 
     if (chatArray.length > 50) {
         chatArray = chatArray.slice(chatArray.length - 50);
@@ -58,7 +61,7 @@ async function dom(){
 
     // console.log(`messages===>`, JSON.parse(localStorage.getItem(`messages${groupId}`)));
 
-    //displau all messages on frontend.
+    //display all messages on frontend.
     chatArray.forEach(ele => {
         // console.log(ele.message);
         if (ele.currentUser) {
@@ -67,6 +70,10 @@ async function dom(){
             showOtherMessgeOnScreen(ele);
         }
     });
+    flag = false;
+    if(backendArray.length){
+        chat.scrollTo(0, chat.scrollHeight);
+    }
 }
 
 
@@ -127,7 +134,7 @@ function showMyMessageOnScreen(obj) {
             </div>
             <div class="triangle"></div>
             <div class="message">
-                <a href="${obj.message}">${obj.message}</a>
+                <a href="${obj.message}">Link</a>
             </div>
           </li>
           `
@@ -163,7 +170,7 @@ function showOtherMessgeOnScreen(obj) {
             </div>
             <div class="triangle"></div>
             <div class="message">
-                <a href="${obj.message}">${obj.message}</a>
+                <a href="${obj.message}">Link</a>
             </div>
         </li>
       `
@@ -335,24 +342,28 @@ async function removeAdmin(email) {
     }
 }
 
-// const upload = document.getElementById('uploadFile');
-
-// upload.addEventListener('submit' , async (e) => {
-//     e.preventDefault();
-//     let file = e.target.firstElementChild.files[0];
-//     console.log(file);
-//     const formData = new FormData(upload);
-
-//     // // formData.append('username', 'Zuber');
-//     // formData.append('file' , file);
-
-//     console.log(formData);
-//     const data = await axios.post(`${backendAPIs}/sendFile/${groupId}` , formData , { headers: { 'Authorization': token , "Content-Type" : "multipart/form-data"  } });
-//     console.log(data);
-// })
 
 
-
+async function uploadFile(){
+    try{
+        const upload = document.getElementById('uploadFile');
+        const formData = new FormData(upload);
+        // const file = document.getElementById('sendFile').files[0];
+        // formData.append('username', 'Zuber');
+        // formData.append('file' , file);
+        // console.log(formData);
+        const responce = await axios.post(`${backendAPIs}/sendFile/${groupId}` , formData , { headers: { 'Authorization': token, "Content-Type":"multipart/form-data" } });
+        console.log(responce.data);
+        document.getElementById('sendFile').value = null;
+        showMyMessageOnScreen(responce.data.data);
+    }catch(err){
+        console.log(err);
+        if(err.response.status == 400){
+            return alert(err.response.data.message);
+        }
+    }
+    
+}
 
 
 //logout functionality
